@@ -110,6 +110,7 @@ bun start
 
 ## Roadmap
 
+- [ ] Windows support (pending Claude Code CLI Windows release)
 - [ ] Convex backend integration
 - [ ] Plugin/extension system
 - [ ] Project templates gallery
