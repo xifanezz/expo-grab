@@ -2,7 +2,7 @@
 
 A modern Electron-based development environment for building React Native/Expo apps with AI assistance.
 
-![Expo Grab Screenshot](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue)
+![Expo Grab Screenshot](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
@@ -32,9 +32,9 @@ bun start
 
 ## Requirements
 
+- **macOS or Linux** (Windows not supported - Claude Code CLI requires Unix)
 - [Bun](https://bun.sh) (recommended) or Node.js 18+
 - [Claude Code CLI](https://claude.ai/claude-code) for AI features
-- macOS, Windows, or Linux
 
 ## Usage
 
