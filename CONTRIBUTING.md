@@ -56,6 +56,8 @@ Help users build **beautiful, production-ready Expo apps**. We want to provide t
 - **Responsive Design** - Screen size handling, tablet support
 - **Accessibility** - a11y best practices for React Native
 
+**Note:** The Expo Grab app UI itself is intentionally minimal and functional. We prefer simple over flashy - the best tools get out of your way.
+
 Files to focus on:
 - `skills/*.md` - Add new skill files for UI patterns
 - `main.js` - `createSkillFiles()` function to add new skills
