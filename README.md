@@ -8,6 +8,7 @@ A modern Electron-based development environment for building React Native/Expo a
 
 ## Features
 
+- **Element Selector** - Click any element in the preview, send it directly to Claude Code with component info, styles, and selector path - *the feature that inspired this project!*
 - **Integrated Terminal** - Full terminal with Claude Code AI assistant built-in
 - **Expo Web Preview** - Live preview of your Expo app with hot reload
 - **Ralph Agent** - Autonomous development agent for hands-free coding
@@ -15,6 +16,20 @@ A modern Electron-based development environment for building React Native/Expo a
 - **Convex Integration** - One-click backend setup with Convex
 - **File Browser** - Drag files to terminal, quick navigation
 - **MCP Server** - Model Context Protocol for Claude communication
+
+### Element Selector - The Core Feature
+
+Select any element from your running Expo app and instantly send it to Claude Code:
+
+1. Click the **Inspect** button in the preview panel
+2. Hover over any element to highlight it
+3. Click to select - element info is sent to Claude Code including:
+   - Component name and hierarchy
+   - CSS selector path
+   - Current styles
+   - Element dimensions
+
+This makes it incredibly easy to say *"change this button's color"* or *"make this text larger"* - Claude knows exactly which element you're referring to!
 
 ## Quick Start
 
