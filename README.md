@@ -31,6 +31,23 @@ Select any element from your running Expo app and instantly send it to Claude Co
 
 This makes it incredibly easy to say *"change this button's color"* or *"make this text larger"* - Claude knows exactly which element you're referring to!
 
+### MCP Server - Claude's Eyes & Hands
+
+Our MCP (Model Context Protocol) server gives Claude **direct access** to your running app:
+
+| Tool | Description |
+|------|-------------|
+| `get_selected_element` | Get full info about the element you selected |
+| `take_screenshot` | Claude can see your app's current state |
+| `get_console_logs` | Read errors, warnings, logs for debugging |
+| `set_viewport_size` | Test on iPhone SE, iPhone 14, iPad, Android, etc. |
+| `refresh_browser` | Refresh the preview after changes |
+| `trigger_hot_reload` | Trigger Expo hot reload |
+| `set_browser_url` | Navigate to different routes |
+| `get_expo_grab_status` | Check connection status |
+
+**What this means:** Claude can see your app, read errors, test on different devices, and understand exactly what you're pointing at. It's like pair programming with someone who can see your screen!
+
 ## Quick Start
 
 ```bash
