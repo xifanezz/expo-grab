@@ -45,19 +45,26 @@ bun start
 
 ## Priority Contribution Areas
 
-### 1. UI/UX Improvements (High Priority)
+### 1. React Native/Expo UI Development (High Priority)
 
-We want a modern, polished interface. Ideas:
-- **Theme system** - Dark/light mode toggle
-- **Responsive layouts** - Better handling of window resizing
-- **Animations** - Smooth transitions and micro-interactions
-- **Accessibility** - Keyboard navigation, screen reader support
-- **Custom components** - Replace basic elements with styled components
+Help users build **beautiful, production-ready Expo apps**. We want to provide the best UI development experience:
+
+- **UI Component Skills** - Best practices for building stunning React Native UIs
+- **Animation Skills** - Reanimated, Moti, Lottie patterns
+- **Design System Templates** - Pre-built themes, color palettes, typography
+- **Component Libraries Integration** - NativeWind, Tamagui, Gluestack guides
+- **Responsive Design** - Screen size handling, tablet support
+- **Accessibility** - a11y best practices for React Native
 
 Files to focus on:
-- `renderer/styles.css` - All styling
-- `renderer/index.html` - HTML structure
-- `renderer/renderer.js` - UI logic
+- `skills/*.md` - Add new skill files for UI patterns
+- `main.js` - `createSkillFiles()` function to add new skills
+
+Ideas for new skills:
+- `ui-patterns.md` - Common UI patterns (cards, lists, forms)
+- `animations.md` - Reanimated/Moti best practices
+- `theming.md` - Dark mode, design tokens, consistent styling
+- `responsive.md` - Multi-screen support
 
 ### 2. Convex Backend Integration (High Priority)
 

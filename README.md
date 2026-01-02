@@ -82,11 +82,12 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Priority Areas
 
-1. **UI/UX Improvements**
-   - Modern, polished interface
-   - Better responsive design
-   - Accessibility improvements
-   - Dark/light theme support
+1. **React Native/Expo UI Development**
+   - UI component skills and patterns
+   - Animation guides (Reanimated, Moti, Lottie)
+   - Design system templates
+   - Component library integration (NativeWind, Tamagui)
+   - Accessibility best practices
 
 2. **Convex Backend Integration**
    - Real-time data sync
@@ -94,11 +95,11 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
    - Project templates with Convex
    - Convex function generation
 
-3. **Features**
-   - More skill files (testing, animations, etc.)
-   - Plugin system
-   - Project templates
-   - Better error handling
+3. **More Skills & Templates**
+   - Testing patterns
+   - State management
+   - Responsive design
+   - Theming & dark mode
 
 ### Getting Started with Development
 
