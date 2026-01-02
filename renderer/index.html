@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-src *; img-src 'self' file: data:;">
+  <title>Expo Grab</title>
+  <link rel="stylesheet" href="xterm.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Overlay to capture mouse events during resize -->
+  <div class="resize-overlay" id="resize-overlay"></div>
+  <div class="app">
+    <!-- Header - Two Rows -->
+    <header class="header">
+      <!-- Row 1: Logo, Project controls, Actions -->
+      <div class="header-row header-row-1">
+        <div class="header-section">
+          <div class="logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <span>Expo Grab</span>
+          </div>
+        </div>
+        <div class="header-section">
+          <div class="btn-group">
+            <button id="new-project-btn" class="header-btn" title="Create new project">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              <span>New</span>
+            </button>
+            <button id="open-project-btn" class="header-btn" title="Open existing project">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+              </svg>
+              <span>Open</span>
+            </button>
+          </div>
+          <span id="project-path" class="project-path">No project selected</span>
+        </div>
+        <div class="header-section header-section-right">
+          <div class="btn-group">
+            <button id="start-claude-btn" class="header-btn accent-orange" title="Start Claude in YOLO mode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+              <span>Claude</span>
+            </button>
+            <button id="ralph-btn" class="header-btn accent-purple" title="Start Ralph autonomous loop">
+              <img src="ralph-icon.png" width="16" height="16" alt="Ralph" style="border-radius: 2px;">
+              <span>Ralph</span>
+            </button>
+            <button id="start-expo-btn" class="header-btn accent-green" title="Start Expo Web">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <span>Expo</span>
+            </button>
+            <button id="create-convex-btn" class="header-btn accent-convex" title="Create Convex project">
+              <img src="convex-icon.png" width="14" height="14" alt="Convex" style="border-radius: 2px;">
+              <span>Convex</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Row 2: URL bar and Inspector -->
+      <div class="header-row header-row-2">
+        <div class="url-bar">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="url-icon">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20"/>
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+          </svg>
+          <input type="text" id="url-input" value="http://localhost:8081" placeholder="http://localhost:8081">
+          <button id="refresh-btn" class="url-btn" title="Refresh">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"/>
+              <path d="M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+          </button>
+          <button id="devtools-btn" class="url-btn" title="DevTools">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </button>
+        </div>
+        <button id="inspector-toggle" class="header-btn inspector-btn" title="Inspect Element (Cmd+Shift+C)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+            <path d="M13 13l6 6"/>
+          </svg>
+          <span>Inspect</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- File Browser Panel -->
+      <div class="panel files-panel" id="files-panel">
+        <div class="panel-header">
+          <span class="panel-title">Files</span>
+          <div class="panel-actions">
+            <button id="upload-file-btn" class="panel-btn" title="Upload file">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </button>
+            <button id="refresh-files-btn" class="panel-btn" title="Refresh">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"/>
+                <path d="M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="files-tree" id="files-tree">
+          <div class="files-empty">No project open</div>
+        </div>
+      </div>
+
+      <!-- Files Resizer -->
+      <div class="resizer files-resizer" id="files-resizer"></div>
+
+      <!-- Terminal Panel -->
+      <div class="panel terminal-panel" id="terminal-panel">
+        <div class="panel-header">
+          <button class="expand-files-btn hidden" id="expand-files-btn" title="Show files">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+            </svg>
+          </button>
+          <div class="terminal-tabs" id="terminal-tabs">
+            <!-- Tabs will be created dynamically -->
+            <button class="new-tab-btn" id="new-tab-btn" title="New Terminal Tab">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+          </div>
+          <div class="panel-actions">
+          </div>
+        </div>
+        <div id="terminals-wrapper">
+          <!-- Terminal instances will be created dynamically -->
+        </div>
+        <!-- Element Info Panel - in terminal side -->
+        <div class="element-panel hidden" id="element-panel">
+          <div class="element-panel-header">
+            <span>Element Inspector</span>
+            <button id="close-element-panel" class="close-btn">&times;</button>
+          </div>
+          <div class="element-panel-content" id="element-panel-content">
+            <div class="element-placeholder">
+              Click on the preview to inspect an element
+            </div>
+          </div>
+          <div class="element-panel-actions">
+            <button id="copy-element-info" class="action-btn">Copy Info</button>
+            <button id="send-element-to-claude" class="action-btn primary">Send to Terminal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resizer -->
+      <div class="resizer" id="resizer"></div>
+
+      <!-- Web Preview Panel -->
+      <div class="panel browser-panel" id="browser-panel">
+        <div class="panel-header">
+          <span class="panel-title">Expo Web Preview</span>
+          <div class="panel-actions">
+            <span id="connection-status" class="connection-status"></span>
+          </div>
+        </div>
+        <div class="webview-container" id="webview-container">
+          <div class="webview-welcome" id="webview-welcome">
+            <div class="welcome-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20"/>
+                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+              </svg>
+            </div>
+            <h2>Expo Web Preview</h2>
+            <p>Start your Expo app to see the live preview</p>
+            <div class="welcome-steps">
+              <div><span>1.</span> Open or create an Expo project</div>
+              <div><span>2.</span> Click <strong>Start Expo</strong> to run the dev server</div>
+              <div><span>3.</span> The preview will load automatically</div>
+              <div><span>4.</span> Use <kbd>Cmd+Shift+C</kbd> to inspect elements</div>
+            </div>
+          </div>
+          <webview id="expo-webview" src="about:blank" class="hidden" nodeintegration="false" webpreferences="contextIsolation=yes"></webview>
+          <!-- Chrome-style inspector overlay -->
+          <div class="inspector-overlay hidden" id="inspector-overlay">
+            <div class="inspector-tooltip" id="inspector-tooltip"></div>
+          </div>
+        </div>
+        <!-- Console Logs Panel -->
+        <div class="console-panel" id="console-panel">
+          <div class="console-header" id="console-header">
+            <div class="console-title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 17 10 11 4 5"/>
+                <line x1="12" y1="19" x2="20" y2="19"/>
+              </svg>
+              <span>Console</span>
+              <span class="console-count" id="console-count">0</span>
+            </div>
+            <div class="console-actions">
+              <button id="clear-console" title="Clear console">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"/>
+                  <path d="M8 6V4h8v2"/>
+                  <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/>
+                </svg>
+              </button>
+              <button id="toggle-console" title="Toggle console">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon">
+                  <polyline points="18 15 12 9 6 15"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="console-content" id="console-content">
+            <div class="console-empty">No console logs yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Editor Modal -->
+    <div class="modal-overlay hidden" id="file-editor-modal">
+      <div class="modal editor-modal">
+        <div class="modal-header">
+          <div class="editor-file-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span id="editor-filename">file.txt</span>
+            <span class="editor-modified hidden" id="editor-modified">*</span>
+          </div>
+          <button id="close-editor" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body editor-body">
+          <div id="codemirror-container"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancel-editor" class="btn secondary">Cancel</button>
+          <button id="save-file" class="btn primary">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="modal-overlay hidden" id="image-preview-modal">
+      <div class="modal image-modal">
+        <div class="modal-header">
+          <div class="editor-file-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span id="image-filename">image.png</span>
+          </div>
+          <button id="close-image" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body image-body">
+          <img id="image-preview" src="" alt="Preview">
+        </div>
+      </div>
+    </div>
+
+    <!-- Markdown Preview Modal -->
+    <div class="modal-overlay hidden" id="markdown-preview-modal">
+      <div class="modal markdown-modal">
+        <div class="modal-header">
+          <div class="editor-file-info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span id="markdown-filename">README.md</span>
+          </div>
+          <div class="markdown-actions">
+            <button id="edit-markdown" class="btn small">Edit</button>
+            <button id="close-markdown" class="close-btn">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body markdown-body">
+          <div id="markdown-content" class="markdown-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu hidden" id="context-menu">
+      <button class="context-item" data-action="rename">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </svg>
+        Rename
+      </button>
+      <button class="context-item" data-action="delete">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+        </svg>
+        Delete
+      </button>
+      <div class="context-divider"></div>
+      <button class="context-item" data-action="copy-path">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy Path
+      </button>
+    </div>
+
+    <!-- Upload File Input (hidden) -->
+    <input type="file" id="file-upload-input" multiple hidden>
+
+    <!-- New Project Modal -->
+    <div class="modal-overlay hidden" id="new-project-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Create New Expo Project</h3>
+          <button id="close-modal" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="project-name">Project Name</label>
+            <input type="text" id="project-name" placeholder="my-expo-app" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Template</label>
+            <div class="template-options">
+              <label class="template-option selected">
+                <input type="radio" name="template" value="blank" checked>
+                <span class="template-card">
+                  <strong>Blank</strong>
+                  <small>Minimal setup</small>
+                </span>
+              </label>
+              <label class="template-option">
+                <input type="radio" name="template" value="blank-typescript">
+                <span class="template-card">
+                  <strong>Blank (TS)</strong>
+                  <small>With TypeScript</small>
+                </span>
+              </label>
+              <label class="template-option">
+                <input type="radio" name="template" value="tabs">
+                <span class="template-card">
+                  <strong>Tabs</strong>
+                  <small>Tab navigation</small>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <div class="location-input">
+              <input type="text" id="project-location" readonly>
+              <button id="browse-location">Browse</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancel-project" class="btn secondary">Cancel</button>
+          <button id="create-project" class="btn primary">Create Project</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ralph Modal -->
+    <div class="modal-overlay hidden" id="ralph-modal">
+      <div class="modal modal-ralph">
+        <div class="modal-header compact">
+          <h3>
+            <img src="ralph-icon.png" width="20" height="20" style="vertical-align: middle; margin-right: 6px;">
+            Ralph
+          </h3>
+          <div class="ralph-header-right">
+            <span id="ralph-project-status" class="ralph-status-badge"></span>
+            <button id="close-ralph-modal" class="close-btn">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body compact">
+          <div id="ralph-status" class="ralph-status"></div>
+
+          <!-- Command Pills -->
+          <div class="ralph-cmd-row">
+            <label class="ralph-pill selected"><input type="radio" name="ralph-command" value="start" checked><span>Start</span></label>
+            <label class="ralph-pill"><input type="radio" name="ralph-command" value="init"><span>Init</span></label>
+            <label class="ralph-pill"><input type="radio" name="ralph-command" value="import"><span>Import</span></label>
+            <label class="ralph-pill"><input type="radio" name="ralph-command" value="status"><span>Status</span></label>
+            <label class="ralph-pill"><input type="radio" name="ralph-command" value="monitor"><span>Monitor</span></label>
+          </div>
+
+          <!-- Start Loop Options -->
+          <div id="ralph-start-options" class="ralph-section">
+            <div class="prompt-bar">
+              <select id="ralph-template" title="Load template">
+                <option value="">Template</option>
+                <option value="screen">New Screen</option>
+                <option value="component">Component</option>
+                <option value="navigation">Navigation</option>
+                <option value="api">API</option>
+                <option value="auth">Auth</option>
+                <option value="fix">Fix Issue</option>
+              </select>
+              <span id="prompt-file-status" class="prompt-status"></span>
+            </div>
+            <textarea id="ralph-prompt" rows="5" placeholder="Describe what you want Ralph to accomplish..."></textarea>
+
+            <!-- Skills as inline pills -->
+            <div class="skills-row">
+              <span class="skills-label">Skills:</span>
+              <label class="skill-pill"><input type="checkbox" id="skill-components" class="skill-checkbox"><span>Components</span></label>
+              <label class="skill-pill"><input type="checkbox" id="skill-navigation" class="skill-checkbox"><span>Nav</span></label>
+              <label class="skill-pill"><input type="checkbox" id="skill-styling" class="skill-checkbox"><span>Style</span></label>
+              <label class="skill-pill"><input type="checkbox" id="skill-api" class="skill-checkbox"><span>API</span></label>
+              <label class="skill-pill"><input type="checkbox" id="skill-performance" class="skill-checkbox"><span>Perf</span></label>
+              <label class="skill-pill"><input type="checkbox" id="skill-auth" class="skill-checkbox"><span>Auth</span></label>
+            </div>
+
+            <!-- Advanced toggle -->
+            <details class="ralph-advanced">
+              <summary>Advanced Options</summary>
+              <div class="advanced-content">
+                <div class="opts-row">
+                  <label class="mini-checkbox"><input type="checkbox" id="ralph-monitor-mode"><span>Monitor</span></label>
+                  <label class="mini-checkbox"><input type="checkbox" id="ralph-verbose"><span>Verbose</span></label>
+                  <label class="mini-checkbox"><input type="checkbox" id="ralph-auto-accept" checked><span>YOLO</span></label>
+                </div>
+                <div class="opts-row">
+                  <div class="mini-input">
+                    <label>Rate</label>
+                    <input type="number" id="ralph-rate-limit" value="100" min="1" max="500">
+                  </div>
+                  <div class="mini-input">
+                    <label>Timeout</label>
+                    <input type="number" id="ralph-timeout" value="15" min="1" max="120">
+                  </div>
+                  <div class="mini-input">
+                    <label>File</label>
+                    <input type="text" id="ralph-prompt-file" value="PROMPT.md">
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Import PRD Options -->
+          <div id="ralph-import-options" class="ralph-section hidden">
+            <div class="location-input compact">
+              <input type="text" id="ralph-prd-file" placeholder="path/to/PRD.md">
+              <button id="browse-prd">Browse</button>
+            </div>
+          </div>
+
+          <!-- Command Preview -->
+          <div class="cmd-preview-row">
+            <code id="ralph-command-preview">ralph</code>
+          </div>
+        </div>
+        <div class="modal-footer compact">
+          <button id="cancel-ralph" class="btn secondary small">Cancel</button>
+          <button id="send-skills-claude" class="btn accent-purple small" title="Send skill references to Claude Code">Skills → Claude</button>
+          <button id="start-ralph" class="btn primary small">Run</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="renderer.js?v=26"></script>
+</body>
+</html>
