@@ -496,7 +496,109 @@ export const darkTheme = vars({
 ## DON'Ts
 - Hardcode colors (bg-white, text-gray-500)
 - Mix semantic and hardcoded colors
-- Forget dark mode support`
+- Forget dark mode support`,
+
+    'ui-components.md': `# NativeWind UI Components
+
+Production-ready components for React Native with NativeWind.
+
+## Button
+\`\`\`tsx
+<Pressable className="bg-primary rounded-xl py-3 px-6 items-center">
+  <Text className="text-primary-foreground font-semibold">Button</Text>
+</Pressable>
+
+// Variants
+bg-primary text-primary-foreground    // Primary
+bg-secondary text-secondary-foreground // Secondary
+bg-transparent border border-border   // Outline
+bg-destructive text-white             // Destructive
+\`\`\`
+
+## Card
+\`\`\`tsx
+<View className="bg-card rounded-2xl p-4 shadow-sm">
+  <Text className="text-card-foreground font-semibold">Title</Text>
+  <Text className="text-muted-foreground">Description</Text>
+</View>
+\`\`\`
+
+## Input
+\`\`\`tsx
+<View className="bg-input border border-border rounded-xl px-4 py-3">
+  <TextInput
+    className="text-foreground"
+    placeholderTextColor="rgb(var(--muted-foreground))"
+    placeholder="Enter text..."
+  />
+</View>
+\`\`\`
+
+## Avatar
+\`\`\`tsx
+<Image
+  source={{ uri: avatarUrl }}
+  className="w-10 h-10 rounded-full bg-muted"
+/>
+
+// With badge
+<View className="relative">
+  <Image className="w-10 h-10 rounded-full" />
+  <View className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+</View>
+\`\`\`
+
+## Badge
+\`\`\`tsx
+<View className="bg-primary px-3 py-1 rounded-full">
+  <Text className="text-primary-foreground text-sm font-medium">Badge</Text>
+</View>
+\`\`\`
+
+## Chip/Filter
+\`\`\`tsx
+<Pressable className={cn(
+  "px-4 py-2 rounded-full border",
+  active ? "bg-primary border-primary" : "bg-transparent border-border"
+)}>
+  <Text className={active ? "text-primary-foreground" : "text-foreground"}>
+    Label
+  </Text>
+</Pressable>
+\`\`\`
+
+## Menu Item
+\`\`\`tsx
+<Pressable className="flex-row items-center py-3 px-4 bg-card rounded-xl">
+  <View className="w-10 h-10 rounded-full bg-muted items-center justify-center mr-3">
+    <Icon />
+  </View>
+  <View className="flex-1">
+    <Text className="text-foreground font-medium">Title</Text>
+    <Text className="text-muted-foreground text-sm">Subtitle</Text>
+  </View>
+  <ChevronRight className="text-muted-foreground" />
+</Pressable>
+\`\`\`
+
+## Empty State
+\`\`\`tsx
+<View className="flex-1 items-center justify-center p-8">
+  <Icon className="text-muted-foreground mb-4" size={48} />
+  <Text className="text-xl font-semibold text-center">No Items</Text>
+  <Text className="text-muted-foreground text-center mt-2">
+    Description here
+  </Text>
+  <Button className="mt-6">Action</Button>
+</View>
+\`\`\`
+
+## cn() Helper
+\`\`\`tsx
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+export const cn = (...inputs) => twMerge(clsx(inputs));
+\`\`\``
   };
 
   for (const [filename, content] of Object.entries(skillFiles)) {
