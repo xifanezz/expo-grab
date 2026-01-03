@@ -356,7 +356,147 @@ const colors = {
 - Heavy shadows (opacity > 0.15)
 - Sharp corners (< 8px radius)
 - Multiple competing colors
-- Text smaller than 12px`
+- Text smaller than 12px`,
+
+    'layout.md': `# React Native Layout Patterns
+
+Layout patterns for NativeWind (Tailwind CSS for React Native).
+
+## Screen Template
+\`\`\`tsx
+<SafeAreaView className="flex-1 bg-background">
+  <ScrollView contentContainerClassName="pb-32">
+    <View className="p-6">
+      <Heading level="h2">Title</Heading>
+    </View>
+    <View className="px-6 gap-4">
+      {/* Content */}
+    </View>
+  </ScrollView>
+</SafeAreaView>
+\`\`\`
+
+## Two-Column Grid
+\`\`\`tsx
+<View className="flex-row flex-wrap gap-4 px-6">
+  {items.map((item) => (
+    <View key={item.id} className="basis-[48%]">
+      <Card>{/* Content */}</Card>
+    </View>
+  ))}
+</View>
+\`\`\`
+
+## Horizontal Scroll
+\`\`\`tsx
+<FlatList
+  horizontal
+  showsHorizontalScrollIndicator={false}
+  contentContainerClassName="px-6 gap-4"
+  renderItem={({ item }) => <Card className="w-64" />}
+/>
+\`\`\`
+
+## Section Header
+\`\`\`tsx
+<View className="flex-row justify-between items-center mb-4">
+  <Heading level="h3">Section</Heading>
+  <Text className="text-primary">See all</Text>
+</View>
+\`\`\`
+
+## Common Mistakes
+\`\`\`tsx
+// ❌ Grid not supported
+<View className="grid grid-cols-2">
+// ✅ Use flex-wrap
+<View className="flex-row flex-wrap gap-4">
+
+// ❌ flex-1 with wrap
+<View className="flex-row flex-wrap">
+  <View className="flex-1">
+// ✅ Use basis
+<View className="basis-[48%]">
+
+// ❌ Content behind tab bar
+<ScrollView>
+// ✅ Add bottom padding
+<ScrollView contentContainerClassName="pb-32">
+
+// ❌ Hardcoded colors
+<View className="bg-white">
+// ✅ Semantic tokens
+<View className="bg-background">
+\`\`\``,
+
+    'theme.md': `# React Native Theme System
+
+NativeWind CSS variables for light/dark mode.
+
+## Light Theme
+\`\`\`typescript
+export const lightTheme = vars({
+  '--background': '255 255 255',
+  '--foreground': '23 23 23',
+  '--card': '255 255 255',
+  '--card-foreground': '23 23 23',
+  '--primary': '24 24 27',
+  '--primary-foreground': '250 250 250',
+  '--secondary': '244 244 245',
+  '--secondary-foreground': '24 24 27',
+  '--muted': '244 244 245',
+  '--muted-foreground': '113 113 122',
+  '--destructive': '220 38 38',
+  '--border': '228 228 231',
+  '--radius': '10',
+});
+\`\`\`
+
+## Dark Theme
+\`\`\`typescript
+export const darkTheme = vars({
+  '--background': '23 23 23',
+  '--foreground': '250 250 250',
+  '--card': '30 30 30',
+  '--card-foreground': '250 250 250',
+  '--primary': '228 228 231',
+  '--primary-foreground': '24 24 27',
+  '--secondary': '39 39 42',
+  '--secondary-foreground': '250 250 250',
+  '--muted': '39 39 42',
+  '--muted-foreground': '161 161 170',
+  '--destructive': '239 68 68',
+  '--border': '39 39 42',
+  '--radius': '10',
+});
+\`\`\`
+
+## Usage
+\`\`\`tsx
+// Backgrounds
+<View className="bg-background">
+<View className="bg-card">
+<View className="bg-muted">
+
+// Text
+<Text className="text-foreground">
+<Text className="text-muted-foreground">
+
+// Buttons
+<TouchableOpacity className="bg-primary rounded-lg px-6 py-3">
+  <Text className="text-primary-foreground">Action</Text>
+</TouchableOpacity>
+\`\`\`
+
+## DO's
+- Use semantic tokens (bg-background, text-foreground)
+- Provide both light and dark themes
+- Use CSS variable radius
+
+## DON'Ts
+- Hardcode colors (bg-white, text-gray-500)
+- Mix semantic and hardcoded colors
+- Forget dark mode support`
   };
 
   for (const [filename, content] of Object.entries(skillFiles)) {
