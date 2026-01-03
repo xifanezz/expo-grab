@@ -214,7 +214,149 @@ const AuthContext = createContext<{
 ## Anti-Patterns to AVOID
 - Storing tokens in AsyncStorage
 - Missing session check on app start
-- Not handling token expiration`
+- Not handling token expiration`,
+
+    'ui-patterns.md': `# Premium UI Patterns Skill
+
+Patterns from top apps: Monzo, DoorDash, Airbnb, Shop, Spotify, Luma, Clubhouse.
+
+## Core Principles
+1. **Restraint** - One accent color, let whitespace breathe
+2. **Elevation** - Subtle shadows create hierarchy, not colored backgrounds
+3. **Consistency** - Same spacing, radii, typography everywhere
+
+## Spacing System
+\`\`\`tsx
+// Screen padding: 16-24px
+<View style={{ paddingHorizontal: 16 }}>
+// Card padding: 16-20px
+// Section spacing: 24-32px between sections
+\`\`\`
+
+## Card Pattern (Elevated, not colored)
+\`\`\`tsx
+const Card = ({ children }) => (
+  <View style={{
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
+  }}>
+    {children}
+  </View>
+);
+\`\`\`
+
+## Button Patterns
+\`\`\`tsx
+// Primary - Black pill
+const PrimaryButton = ({ title }) => (
+  <Pressable style={{
+    backgroundColor: '#000',
+    borderRadius: 100,
+    paddingVertical: 16,
+    alignItems: 'center',
+  }}>
+    <Text style={{ color: '#FFF', fontWeight: '600' }}>{title}</Text>
+  </Pressable>
+);
+
+// Secondary - Gray background
+const SecondaryButton = ({ title }) => (
+  <Pressable style={{
+    backgroundColor: '#F5F5F5',
+    borderRadius: 100,
+    paddingVertical: 16,
+  }}>
+    <Text style={{ fontWeight: '600' }}>{title}</Text>
+  </Pressable>
+);
+\`\`\`
+
+## Typography Scale
+\`\`\`tsx
+h1: { fontSize: 32, fontWeight: '700' }
+h2: { fontSize: 24, fontWeight: '700' }
+h3: { fontSize: 20, fontWeight: '600' }
+body: { fontSize: 14, color: '#666' }
+caption: { fontSize: 12, color: '#999' }
+\`\`\`
+
+## Section Header
+\`\`\`tsx
+<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+  <Text style={{ fontSize: 20, fontWeight: '700' }}>Popular</Text>
+  <Text style={{ color: '#007AFF' }}>See all</Text>
+</View>
+\`\`\`
+
+## Avatar with Badge
+\`\`\`tsx
+<View>
+  <Image style={{ width: 40, height: 40, borderRadius: 20 }} />
+  <View style={{
+    position: 'absolute', bottom: 0, right: 0,
+    width: 12, height: 12, borderRadius: 6,
+    backgroundColor: '#34C759', borderWidth: 2, borderColor: '#FFF'
+  }} />
+</View>
+\`\`\`
+
+## Filter Chips (Horizontal scroll)
+\`\`\`tsx
+<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16 }}>
+    <Chip label="All" active />
+    <Chip label="Popular" />
+    <Chip label="New" />
+  </View>
+</ScrollView>
+\`\`\`
+
+## Image Card with Badge (Airbnb style)
+\`\`\`tsx
+<View>
+  <Image style={{ borderRadius: 12, height: 180 }} />
+  <View style={{
+    position: 'absolute', top: 12, left: 12,
+    backgroundColor: '#FFF', borderRadius: 100, padding: 8
+  }}>
+    <Text>Guest favorite</Text>
+  </View>
+</View>
+\`\`\`
+
+## Color Palette
+\`\`\`tsx
+const colors = {
+  background: '#FFFFFF',
+  backgroundSecondary: '#F8F8F8',
+  cream: '#FDF8F3', // Clubhouse style alternative
+  text: '#000000',
+  textSecondary: '#666666',
+  border: '#E5E5E5',
+  accent: '#007AFF', // Pick ONE
+};
+\`\`\`
+
+## DO's
+- Use 16-24px padding
+- Use borderRadius 12-20px
+- Use subtle shadows (opacity 0.08)
+- Use ONE accent color
+- Use pill buttons (borderRadius: 100)
+- Use cream/beige as white alternative
+
+## DON'Ts
+- Colored background cards (looks dated)
+- Heavy shadows (opacity > 0.15)
+- Sharp corners (< 8px radius)
+- Multiple competing colors
+- Text smaller than 12px`
   };
 
   for (const [filename, content] of Object.entries(skillFiles)) {

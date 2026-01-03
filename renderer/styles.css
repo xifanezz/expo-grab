@@ -944,7 +944,7 @@ body {
 }
 
 .terminal-panel {
-  width: 40%;
+  width: 65%;
   min-width: 300px;
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -2463,12 +2463,14 @@ body.resizing .resize-overlay {
   border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  max-height: 200px;
-  transition: max-height 0.2s ease;
+  height: 150px;
+  min-height: 32px;
+  flex-shrink: 0;
+  transition: height 0.2s ease;
 }
 
 .console-panel.collapsed {
-  max-height: 32px;
+  height: 32px;
 }
 
 .console-panel.collapsed .console-content {
@@ -2559,7 +2561,6 @@ body.resizing .resize-overlay {
   font-family: 'SF Mono', Monaco, monospace;
   font-size: 11px;
   background: var(--bg-primary);
-  max-height: 168px;
 }
 
 .console-empty {
